@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For You ❤️</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial;
+    overflow: hidden;
+}
+
+/* Background */
+body::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e') center/cover no-repeat;
+    filter: blur(12px);
+    transform: scale(1.1);
+    z-index: -2;
+}
+
+body::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: -1;
+}
+
+/* Card */
+.card {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(15px);
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    color: white;
+    z-index: 2;
+}
+
+button {
+    margin-top: 20px;
+    padding: 12px 25px;
+    border: none;
+    background: #ff4b5c;
+    color: white;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* Spark container */
+#spark-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+/* Sparks */
+.spark {
+    position: absolute;
+    background: gold;
+    border-radius: 50%;
+    animation: explode 1.2s ease-out forwards;
+}
+
+@keyframes explode {
+    0% {
+        transform: translate(0,0);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--x), var(--y));
+        opacity: 0;
+    }
+}
+
+/* Love Letter */
+#letter {
+    position: absolute;
+    width: 90%;
+    max-width: 600px;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.8s ease;
+    z-index: 5;
+}
+
+/* Show letter */
+#letter.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Optional: hide card after click */
+.card.hide {
+    opacity: 0;
+    transition: 0.5s;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="card" id="card">
+    <h1>Hey ❤️</h1>
+    <p>Today is our first meet-up... and it already feels special.</p>
+    <button onclick="blast()">Click me 😊</button>
+</div>
+
+<div id="spark-container"></div>
+
+<!-- Replace with YOUR love letter image -->
+<img id="letter" src="https://i.imgur.com/8Km9tLL.png">
+
+<script>
+function blast() {
+
+    const container = document.getElementById("spark-container");
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    // Hide card
+    document.getElementById("card").classList.add("hide");
+
+    // Create sparks
+    for (let i = 0; i < 100; i++) {
+        let spark = document.createElement("div");
+        spark.classList.add("spark");
+
+        // Random size
+        let size = Math.random() * 6 + 4;
+        spark.style.width = size + "px";
+        spark.style.height = size + "px";
+
+        // Full screen spread
+        let x = (Math.random() * width - width/2) + "px";
+        let y = (Math.random() * height - height/2) + "px";
+
+        spark.style.setProperty("--x", x);
+        spark.style.setProperty("--y", y);
+
+        container.appendChild(spark);
+
+        setTimeout(() => spark.remove(), 1200);
+    }
+
+    // Show love letter after animation
+    setTimeout(() => {
+        document.getElementById("letter").classList.add("show");
+    }, 700);
+}
+</script>
+
+</body>
+</html>
