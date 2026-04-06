@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+v<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -18,23 +18,24 @@ body {
     align-items: center;
     font-family: Arial;
     overflow: hidden;
+    background: black;
 }
 
-/* Background */
+/* Background blur */
 body::before {
     content: "";
-    position: absolute;
+    position: fixed;
     width: 100%;
     height: 100%;
     background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e') center/cover no-repeat;
-    filter: blur(12px);
+    filter: blur(10px);
     transform: scale(1.1);
     z-index: -2;
 }
 
 body::after {
     content: "";
-    position: absolute;
+    position: fixed;
     width: 100%;
     height: 100%;
     background: rgba(0,0,0,0.5);
@@ -50,6 +51,11 @@ body::after {
     text-align: center;
     color: white;
     z-index: 2;
+    transition: 0.5s;
+}
+
+.card.hide {
+    opacity: 0;
 }
 
 button {
@@ -60,30 +66,25 @@ button {
     color: white;
     border-radius: 12px;
     cursor: pointer;
-    font-size: 16px;
-}
-
-/* Spark container */
-#spark-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
 }
 
 /* Sparks */
 .spark {
     position: absolute;
+    width: 8px;
+    height: 8px;
     background: gold;
     border-radius: 50%;
-    animation: explode 1.2s ease-out forwards;
+    box-shadow: 0 0 10px gold, 0 0 20px gold;
+    animation: move 1s linear forwards;
 }
 
-@keyframes explode {
-    0% {
+@keyframes move {
+    from {
         transform: translate(0,0);
         opacity: 1;
     }
-    100% {
+    to {
         transform: translate(var(--x), var(--y));
         opacity: 0;
     }
@@ -91,25 +92,18 @@ button {
 
 /* Love Letter */
 #letter {
-    position: absolute;
+    position: fixed;
     width: 90%;
     max-width: 600px;
     opacity: 0;
     transform: scale(0.5);
-    transition: all 0.8s ease;
+    transition: 0.8s ease;
     z-index: 5;
 }
 
-/* Show letter */
 #letter.show {
     opacity: 1;
     transform: scale(1);
-}
-
-/* Optional: hide card after click */
-.card.hide {
-    opacity: 0;
-    transition: 0.5s;
 }
 </style>
 
@@ -123,47 +117,35 @@ button {
     <button onclick="blast()">Click me 😊</button>
 </div>
 
-<div id="spark-container"></div>
-
-<!-- Replace with YOUR love letter image -->
+<!-- Replace with your letter -->
 <img id="letter" src="https://i.imgur.com/8Km9tLL.png">
 
 <script>
 function blast() {
 
-    const container = document.getElementById("spark-container");
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-
-    // Hide card
+    // hide card
     document.getElementById("card").classList.add("hide");
 
-    // Create sparks
-    for (let i = 0; i < 100; i++) {
-        let spark = document.createElement("div");
-        spark.classList.add("spark");
+    // create sparks (WORKING LOGIC)
+    for (let i = 0; i < 80; i++) {
+        let s = document.createElement("div");
+        s.className = "spark";
 
-        // Random size
-        let size = Math.random() * 6 + 4;
-        spark.style.width = size + "px";
-        spark.style.height = size + "px";
+        let x = (Math.random() - 0.5) * window.innerWidth + "px";
+        let y = (Math.random() - 0.5) * window.innerHeight + "px";
 
-        // Full screen spread
-        let x = (Math.random() * width - width/2) + "px";
-        let y = (Math.random() * height - height/2) + "px";
+        s.style.setProperty("--x", x);
+        s.style.setProperty("--y", y);
 
-        spark.style.setProperty("--x", x);
-        spark.style.setProperty("--y", y);
+        document.body.appendChild(s);
 
-        container.appendChild(spark);
-
-        setTimeout(() => spark.remove(), 1200);
+        setTimeout(() => s.remove(), 1000);
     }
 
-    // Show love letter after animation
+    // show letter
     setTimeout(() => {
         document.getElementById("letter").classList.add("show");
-    }, 700);
+    }, 500);
 }
 </script>
 
